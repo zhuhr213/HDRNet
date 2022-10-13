@@ -130,11 +130,9 @@ class multiscale(nn.Module):
         x4 = torch.cat([x0, x1, x2, x3], dim=1)
         return x4 + x
 
-
-
-class MyNet10(nn.Module):  # 再次尝试lstm + conv， 后续加上attention
+class HDRNet(nn.Module):  # 再次尝试lstm + conv， 后续加上attention
     def __init__(self, k=3):
-        super(MyNet10, self).__init__()
+        super().__init__()
         base_channel = 8
         number_of_layers = int(log(101-k+1, 2))  # 99->6
 

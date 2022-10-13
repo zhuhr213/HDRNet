@@ -569,8 +569,6 @@ def motif_analysis(pos_seqs,
                 f.write(str(motif_pval[motif])+'\n')
             # make weblogo   
 
-            # TODO 这里需要对每个cell都求motif，然后每个根据p值选前三个，然后再整合，再选前三，最后对每个RBP画图
-
             # seqs = [Seq(v) for i,v in enumerate(instances['seqs'])]
             # m = motifs.create(seqs)
             # m.weblogo(save_file_dir+"/motif_{}_{}_weblogo.png".format(motif, len(instances['seq_idx'])), format='png_print', show_fineprint=False, show_ends=False, color_scheme='color_classic')

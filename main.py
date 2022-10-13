@@ -7,13 +7,13 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import OneCycleLR
+from utils.HDRNet import HDRNet
 
 from utils.gen_bert_embedding import circRNABert
 
 import torch.utils.data
 from src.transformers import BertModel, BertTokenizer
 
-from utils.MyNet1 import *
 from utils.train_loop import train, validate
 from utils.utils import read_csv, myDataset, GradualWarmupScheduler, param_num, split_dataset, seq2kmer
 
@@ -93,7 +93,7 @@ def main(args):
         train_loader = DataLoader(train_set, batch_size=32, shuffle=True)
         test_loader = DataLoader(test_set, batch_size=32 * 8, shuffle=False)
 
-        model = MyNet10().to(device)
+        model = HDRNet().to(device)
         # model = torch.nn.DataParallel(model, device_ids=[0, 1, 2, 3])
 
         criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(2))
@@ -140,7 +140,7 @@ def main(args):
 
         print("{} auc: {:.4f} acc: {:.4f}".format(file_name, best_auc, best_acc))
 
-    if args.validate:  # validate only
+    if args.validate:  # validate only. WARNING: PLEASE FIX SEED BEFORE VALIDATION.
         sequences, structs, label = read_csv(os.path.join(data_path, file_name+'.tsv'))
         [train_seq, train_struc, train_label], [test_seq, test_struc, test_label] = \
             split_dataset(sequences, structs, label) 
@@ -164,7 +164,7 @@ def main(args):
         test_set = myDataset(test_emb, structure, test_label)
         test_loader = DataLoader(test_set, batch_size=32 * 8, shuffle=False)
 
-        model = MyNet10().to(device)
+        model = HDRNet().to(device)
         model_file = os.path.join(args.model_save_path, file_name+'.pth')
         if not os.path.exists(model_file):
             print('Model file does not exitsts! Please train first and save the model')
@@ -210,7 +210,7 @@ def main(args):
         test_set = myDataset(test_emb, structure, test_label)
         test_loader = DataLoader(test_set, batch_size=32 * 8, shuffle=False)
 
-        model = MyNet10().to(device)
+        model = HDRNet().to(device)
         # model_path = args.model_save_path
         model_path = os.path.join(args.model_save_path, model_file+'.pth')
         if not os.path.exists(model_path):
