@@ -25,7 +25,6 @@ def fix_seed(seed):
         seed = random.randint(1, 10000)
     torch.set_num_threads(1)  # Suggested for issues with deadlocks, etc.
     seed = round(seed * random.random())
-    print(seed)
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
@@ -66,14 +65,12 @@ def main(args):
     file_name = args.data_file
     data_path = args.data_path
 
-
     if args.train:
         sequences, structs, label = read_csv(os.path.join(data_path, file_name+'.tsv'))
 
         bert_model_path = args.BERT_model_path
         tokenizer = BertTokenizer.from_pretrained(bert_model_path, do_lower_case=False)
         model = BertModel.from_pretrained(bert_model_path)
-        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         model = model.to(device)
         # model = torch.nn.DataParallel(model, device_ids=[0, 1, 2, 3])
         model = model.eval()
@@ -143,17 +140,14 @@ def main(args):
 
         print("{} auc: {:.4f} acc: {:.4f}".format(file_name, best_auc, best_acc))
 
-
-
     if args.validate:  # validate only
         sequences, structs, label = read_csv(os.path.join(data_path, file_name+'.tsv'))
         [train_seq, train_struc, train_label], [test_seq, test_struc, test_label] = \
-            split_dataset(sequences, structure, label) 
+            split_dataset(sequences, structs, label) 
 
         bert_model_path = args.BERT_model_path
         tokenizer = BertTokenizer.from_pretrained(bert_model_path, do_lower_case=False)
         model = BertModel.from_pretrained(bert_model_path)
-        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         model = model.to(device)
         # model = torch.nn.DataParallel(model, device_ids=[0, 1, 2, 3])
         model = model.eval()
@@ -167,11 +161,11 @@ def main(args):
             ti = np.array(ti).reshape(1, -1)
             structure[i] = np.concatenate([ti], axis=0)
 
-        test_set = myDataset(test_emb, test_struc, test_label)
+        test_set = myDataset(test_emb, structure, test_label)
         test_loader = DataLoader(test_set, batch_size=32 * 8, shuffle=False)
 
         model = MyNet10().to(device)
-        model_file = os.path.join(model_save_path, file_name+'.pth')
+        model_file = os.path.join(args.model_save_path, file_name+'.pth')
         if not os.path.exists(model_file):
             print('Model file does not exitsts! Please train first and save the model')
             exit()
@@ -184,6 +178,54 @@ def main(args):
         best_acc = met.acc
         print("{} auc: {:.4f} acc: {:.4f}".format(file_name, best_auc, best_acc))
 
+    if args.dynamic_validate:   # perform dynamic prediction between K562 cell and HepG2 cell
+        # cell_list = ['K562', 'HepG2']
+        if file_name.endswith('K562'):
+            model_file = file_name.replace('K562', 'HepG2')
+        elif file_name.endswith('HepG2'):
+            model_file = file_name.replace('HepG2', 'K562')
+        else:
+            print("Dynamic prediction only performs on K562 cells and HepG2 cells!")
+            exit()
+        sequences, structs, label = read_csv(os.path.join(data_path, file_name+'.tsv'))
+        [train_seq, train_struc, train_label], [test_seq, test_struc, test_label] = \
+            split_dataset(sequences, structs, label) 
+
+        bert_model_path = args.BERT_model_path
+        tokenizer = BertTokenizer.from_pretrained(bert_model_path, do_lower_case=False)
+        model = BertModel.from_pretrained(bert_model_path)
+        model = model.to(device)
+        # model = torch.nn.DataParallel(model, device_ids=[0, 1, 2, 3])
+        model = model.eval()
+        bert_embedding = circRNABert(list(test_seq), model, tokenizer, device, 3)  # (N, 99, 768)
+        test_emb = bert_embedding.transpose([0, 2, 1])  # (N, 768, 99)
+
+        structure = np.zeros((len(test_struc), 1, max_length))  # (N, 1, 101)
+        for i in range(len(test_struc)):
+            struct = test_struc[i].split(',')
+            ti = [float(t) for t in struct]
+            ti = np.array(ti).reshape(1, -1)
+            structure[i] = np.concatenate([ti], axis=0)
+
+        test_set = myDataset(test_emb, structure, test_label)
+        test_loader = DataLoader(test_set, batch_size=32 * 8, shuffle=False)
+
+        model = MyNet10().to(device)
+        # model_path = args.model_save_path
+        model_path = os.path.join(args.model_save_path, model_file+'.pth')
+        if not os.path.exists(model_path):
+            print('The dynamic predition model {} does not exist! Please train first!'.format(model_file))
+            exit()
+        model = model.load_state_dict(torch.load(model_file))
+        criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(2))
+
+        print('Using {} model to predict {} cell'.format(model_file, file_name))
+        met, y_all, p_all = validate(model, device, test_loader, criterion)
+        best_auc = met.auc
+        best_acc = met.acc
+        print("{} auc: {:.4f} acc: {:.4f}".format(file_name, best_auc, best_acc))
+
+        
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Welcome to HDRNet!')
@@ -195,7 +237,6 @@ if __name__ == '__main__':
     parser.add_argument('--train', default=False, action='store_true')
     parser.add_argument('--validate', default=False, action='store_true')
     parser.add_argument('--dynamic_validate', default=False, action='store_true')
-    # parser.add_argument('--save_results', type=bool, default=False, action='store_true', help='Save prediction results for ploting AUROC curve')
 
     parser.add_argument('--early_stopping', type=int, default=20)
 
