@@ -11,7 +11,7 @@ from torch.optim.lr_scheduler import OneCycleLR
 from utils.gen_bert_embedding import circRNABert
 
 import torch.utils.data
-from transformers import BertModel, BertTokenizer
+from src.transformers import BertModel, BertTokenizer
 
 from utils.MyNet1 import *
 from utils.train_loop import train, validate
