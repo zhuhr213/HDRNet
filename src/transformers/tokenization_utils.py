@@ -372,8 +372,8 @@ class PreTrainedTokenizer(object):
             assert tokenizer.unk_token == '<unk>'
 
         """
-        print("="*60)
-        print(cls)
+        # print("="*60)
+        # print(cls)
         return cls._from_pretrained(*inputs, **kwargs)
 
     @classmethod
