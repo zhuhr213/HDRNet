@@ -2,7 +2,7 @@
 
 HDRNet is developed for RNA-RBP interaction sites identification using CNN based deep network.
 
-![HDRNet](https://www.baidu.com/img/bd_logo1.png)  
+![HDRNet](https://github.com/zhuhr213/HDRNet/blob/master/HDRNet.png)  
 
 ## NOTICE
 
