@@ -53,7 +53,7 @@ then the AARS_HepG2 model will be loaded to valid the AARS_K562 dataset. The tra
 be saved first.
 
 The prediction results will be displayed automatically. If you need to save the results, please  
-specify the path yourself. 
+specify the path yourself.
 
 Thank you for using HDRNet! Any questions, suggestions or advice are welcome!  
 Contact: zhuhr20@mails.jlu.edu.cn
