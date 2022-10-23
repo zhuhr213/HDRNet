@@ -15,9 +15,11 @@ Due to the capacity limiation of Github, we put the relevant files (including th
 * scipy 1.9.1
 * sklearn 1.0.2
 * pandas 1.4.1
+* transformers
 * Linux Ubuntu 20.04
 
-NOTE: The *transformers* package is already implemented in *src* folder.
+NOTE: The *transformers* package is already implemented in *src* folder, please first use "conda install transformers" to install the package first, and then use
+"from src.transformers import BertModel, BertTokenizer" to import.
 
 Any missing packages, please use pip install or conda install to install.
 
