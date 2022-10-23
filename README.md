@@ -6,7 +6,7 @@ HDRNet is developed for RNA-RBP interaction sites identification using CNN based
 
 ## NOTICE
 
-Due to the capacity limiation of Github, we put the relevant files (including the BERT model and all datasets) in our webserver  ******. All source code, data and model are open source and can be downloaded from GitHub or any other processes.
+Due to the capacity limiation of Github, we put the relevant files (including the BERT model and all datasets) in our webserver http://39.104.69.176:5050/#. All source code, data and model are open source and can be downloaded from GitHub or any other processes.
 
 ## Requirements
 
