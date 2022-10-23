@@ -15,6 +15,7 @@ Due to the capacity limiation of Github, we put the relevant files (including th
 * scipy 1.9.1
 * sklearn 1.0.2
 * pandas 1.4.1
+* Linux Ubuntu 20.04
 
 NOTE: The *transformers* package is already implemented in *src* folder.
 
