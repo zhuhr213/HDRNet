@@ -1,4 +1,4 @@
-# HDRNet: high-throughput dynamic cellular RNA-binding event identification in diverse cellular conditions
+# HDRNet: high-throughput dynamic RNA-binding event identification with deep learning in diverse cellular conditions across 261 datasets
 
 HDRNet is developed for RNA-RBP interaction sites identification using CNN based deep network.
 
