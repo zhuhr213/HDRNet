@@ -24,7 +24,6 @@ def fix_seed(seed):
     if seed is None:
         seed = random.randint(1, 10000)
     torch.set_num_threads(1)  # Suggested for issues with deadlocks, etc.
-    seed = round(seed * random.random())
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
