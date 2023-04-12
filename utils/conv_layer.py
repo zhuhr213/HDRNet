@@ -25,7 +25,7 @@ class Conv2d(nn.Module):
         return x
 
 
-class Conv1d(nn.Module):  # 专门为bert_embedding 设计的一个层
+class Conv1d(nn.Module): 
     def __init__(self, in_channels, out_channels, kernel_size, stride=(1,),
                  dilation=(1,), if_bias=False, relu=True, same_padding=True, bn=True):
         super(Conv1d, self).__init__()
