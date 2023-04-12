@@ -1,32 +1,21 @@
-from torch.nn.modules.dropout import Dropout
 from utils.resnet import *
-from math import sqrt, log
+from math import log
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from utils.conv_layer import *
-
 
 class DPCNNblock(nn.Module):
     def __init__(self, filter_num, kernel_size, dilation):
         super(DPCNNblock, self).__init__()
         self.conv = Conv1d(filter_num, filter_num, kernel_size=kernel_size, stride=1, dilation=dilation, same_padding=False)
         self.conv1 = Conv1d(filter_num, filter_num, kernel_size=kernel_size, stride=1, dilation=dilation, same_padding=False)
-        # self.average_pooling = nn.AvgPool1d(kernel_size=(3, ), stride=2)
         self.max_pooling = nn.MaxPool1d(kernel_size=(3, ), stride=2)
         self.padding_conv = nn.ConstantPad1d(((kernel_size-1)//2)*dilation, 0)
         self.padding_pool = nn.ConstantPad1d((0, 1), 0)
 
     def forward(self, x):
         x = self.padding_pool(x)
-        # x: [batch_size, filter_num, len+1, 1]
-        
-        
         px = self.max_pooling(x)
-        # px = self.average_pooling(x)  # 用作参数讨论，一定要记得改回来
-
-
-
         # px: [batch_size, filter_num, ((len+1)-3)//2 + 1, 1-1+1=1]
         x = self.padding_conv(px)
         # x: [batch_size, filter_num, ((len+1)-3)//2+1+2 = ((len+1)-3)//2+3, 1]
@@ -45,11 +34,8 @@ class DPCNN(nn.Module):
     def __init__(self, filter_num, number_of_layers):
         super(DPCNN, self).__init__()
 
-
-
         self.kernel_size_list = [1+x*2 for x in range(number_of_layers)]
         self.kernel_size_list = [5, 5, 5, 5, 5, 5]
-        # self.kernel_size_list.reverse()
         self.dilation_list = [1, 1, 1, 1, 1, 1]
         self.conv = Conv1d(filter_num, filter_num, self.kernel_size_list[0], stride=1, dilation=1, same_padding=False)
         self.conv1 = Conv1d(filter_num, filter_num, self.kernel_size_list[0], stride=1, dilation=1, same_padding=False)
@@ -66,38 +52,24 @@ class DPCNN(nn.Module):
     def forward(self, x):
 
         x = self.padding_conv(x)
-        # x: [batch_size, filter_num, seq_len, 1]
         x = self.conv(x)
-        # x : [batch_size, filter_num, seq_len-3+1, 1-1+1=1]
-
         x = self.padding_conv(x)
-        # x: [batch_size, filter_num, seq_len, 1]
-
         x = self.conv1(x)
-        # x : [batch_size, filter_num, seq_len-3+1, 1-1+1=1]
         i = 0
-        while x.size()[-1] > 2:   # 原来是2
+        while x.size()[-1] > 2:
             x = self.DPCNNblocklist[i](x)
-            # x = self._block(x)
             i += 1
 
-        # x = F.adaptive_max_pool1d(x, 1)
-        # x = F.adaptive_avg_pool1d(x, 1)
-
         x = x.squeeze(-1).squeeze(-1)
-        # x: [batch_size, filter_num]
 
         logits = self.classifier(x)
-        # logits: [batch_size, output_dim]
 
-        return logits #, x
+        return logits
 
 
 class multiscale(nn.Module):
     def __init__(self, in_channel, out_channel):
         super(multiscale, self).__init__()
-
-        # self.conv = Conv1d(in_channel, out_channel*3, kernel_size=(1,), same_padding=False)
 
         self.conv0 = Conv1d(in_channel, out_channel, kernel_size=(1,), same_padding=False)
 
@@ -120,7 +92,6 @@ class multiscale(nn.Module):
         )
 
     def forward(self, x):
-        # rx = self.conv(x)
 
         x0 = self.conv0(x)
         x1 = self.conv1(x)
@@ -130,11 +101,11 @@ class multiscale(nn.Module):
         x4 = torch.cat([x0, x1, x2, x3], dim=1)
         return x4 + x
 
-class HDRNet(nn.Module):  # 再次尝试lstm + conv， 后续加上attention
+class HDRNet(nn.Module):
     def __init__(self, k=3):
         super().__init__()
         base_channel = 8
-        number_of_layers = int(log(101-k+1, 2))  # 99->6
+        number_of_layers = int(log(101-k+1, 2))
 
         self.conv0 = Conv1d(768, 128, kernel_size=(1,), stride=1)
         
@@ -142,7 +113,7 @@ class HDRNet(nn.Module):  # 再次尝试lstm + conv， 后续加上attention
 
         self.multiscale_str = multiscale(128, 32)
         self.multiscale_bert = multiscale(128, 32)
-        self.dpcnn = DPCNN(64 * 4, number_of_layers)   # 这里原来是64 * 4
+        self.dpcnn = DPCNN(64 * 4, number_of_layers)
 
         self._initialize_weights()
 
@@ -174,8 +145,5 @@ class HDRNet(nn.Module):  # 再次尝试lstm + conv， 后续加上attention
         x0 = self.multiscale_bert(x0)
         x1 = self.multiscale_str(x1)
         x = torch.cat([x0, x1], dim=1)
-        # x = x0 + x1
-        # se = self.SE(x)
-        # x = self.multiscale(x)
 
         return self.dpcnn(x)
