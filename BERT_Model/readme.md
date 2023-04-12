@@ -1,0 +1,1 @@
+### Due to the limitation of Github, we have uploaded the BERT model to figshare.
