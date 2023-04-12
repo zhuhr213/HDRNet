@@ -52,7 +52,7 @@ numpy
 scipy
 pytorch
 scikit-learn
-skimage
+scikit-image
 pandas
 transformers
 shap
