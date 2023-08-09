@@ -33,7 +33,7 @@ RNA-binding proteins (RBPs) play crucial roles in various genetic contexts, and 
 
 ## NOTICE
 
-Due to the capacity limiation of Github, we put the relevant files (including the BERT model and all datasets) in our webserver <a href="http://39.104.69.176:5050/">webserver</a> and <a href="https://figshare.com/articles/software/HDRNet_zip/21454713">figshare</a>. All source code, data and model are open source and can be downloaded from GitHub or any other processes.
+Due to the capacity limiation of Github, we put the relevant files (including the BERT model and all datasets) in our webserver <a href="http://www.aibio-lab.com:5050/">webserver</a> and <a href="https://figshare.com/articles/software/HDRNet_zip/21454713">figshare</a>. All source code, data and model are open source and can be downloaded from GitHub or any other processes.
 
 
 # System Requirements
