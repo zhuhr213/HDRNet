@@ -107,7 +107,7 @@ We also provide users with a complete prediction process in the <a href="https:/
 
 
 # Data Availability
-We present a user-friendly web server for the HDRNet method at <a href="http://39.104.69.176:5050/">webserver</a>, which enables users to determine whether a given RNA sequence is a binding site for RNA-binding proteins (RBPs). Moreover, all supporting source code and data can be downloaded from <a href="https://github.com/zhuhr213/HDRNet">here</a> and <a href="https://figshare.com/articles/software/HDRNet\_zip/21454713">figshare</a>.
+We present a user-friendly web server for the HDRNet method at <a href="http://www.aibio-lab.com:5050/">webserver</a>, which enables users to determine whether a given RNA sequence is a binding site for RNA-binding proteins (RBPs). Moreover, all supporting source code and data can be downloaded from <a href="https://github.com/zhuhr213/HDRNet">here</a> and <a href="https://figshare.com/articles/software/HDRNet_zip/21454713">figshare</a>.
                                     
 
 # License
