@@ -16,6 +16,9 @@
   <a href="https://github.com/zhuhr213/HDRNet/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/zhuhr213/HDRNet">
   </a>
+  <a href="https://zenodo.org/badge/latestdoi/626892172">
+    <img src="https://zenodo.org/badge/626892172.svg" alt="DOI">
+  </a>
 </p>
 
 `HDRNet` is a python package developed for RNA-RBP interaction sites identification and high-attention binding peak recognization using CNN based deep network.
