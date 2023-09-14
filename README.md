@@ -36,7 +36,7 @@ RNA-binding proteins (RBPs) play crucial roles in the regulation of gene express
 
 ## NOTICE
 
-Due to the capacity limiation of Github, we put the relevant files (including the BERT model and all datasets) in our webserver <a href="http://www.aibio-lab.com:5050/">webserver</a> and <a href="https://figshare.com/articles/software/HDRNet_zip/21454713">figshare</a>. All source code, data and model are open source and can be downloaded from GitHub or any other processes.
+Due to the capacity limiation of Github, we put the relevant files (including the BERT model and all datasets) in our webserver <a href="http://www.aibio-lab.com:5050/">webserver</a> and <a href="https://doi.org/10.5281/zenodo.8341649">Zenodo</a>. All source code, data and model are open source and can be downloaded from GitHub or any other processes.
 
 
 # System Requirements
@@ -110,7 +110,7 @@ We also provide users with a complete prediction process in the <a href="https:/
 
 
 # Data Availability
-We present a user-friendly web server for the HDRNet method at <a href="http://www.aibio-lab.com:5050/">webserver</a>, which enables users to determine whether a given RNA sequence is a binding site for RNA-binding proteins (RBPs). Moreover, all supporting source code and data can be downloaded from <a href="https://github.com/zhuhr213/HDRNet">here</a> and <a href="https://figshare.com/articles/software/HDRNet_zip/21454713">figshare</a>.
+We present a user-friendly web server for the HDRNet method at <a href="http://www.aibio-lab.com:5050/">webserver</a>, which enables users to determine whether a given RNA sequence is a binding site for RNA-binding proteins (RBPs). Moreover, all supporting source code and data can be downloaded from <a href="https://github.com/zhuhr213/HDRNet">here</a> and <a href="https://doi.org/10.5281/zenodo.8341649">Zenodo</a>.
                                     
 
 # License
