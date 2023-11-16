@@ -26,7 +26,7 @@ def circRNA_Bert(dataloader, model, tokenizer, device):
     for sequences in dataloader:
         seq.append(sequences)
 
-        ids = tokenizer.batch_encode_plus(sequences, add_special_tokens=True, padding='max_length')
+        ids = tokenizer.batch_encode_plus(sequences, add_special_tokens=True)
         # print(ids)
         input_ids = torch.tensor(ids['input_ids']).to(device)
         token_type_ids = torch.tensor(ids['token_type_ids']).to(device)
